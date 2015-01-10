@@ -1,0 +1,4 @@
+# version 1.0
+
+As a subgoal of developing human-like exploration agent, the aim of this project is to investigate the features, performances and prefrerences of 
+up-to-date exploration strategies, approaches and algorithms in robotic field and so forth.
