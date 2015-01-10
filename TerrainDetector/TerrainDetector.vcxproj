@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C818113-D9D5-4C62-BE78-AB4426B00BCE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TerrainDetector</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v90</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v90</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TERRAINDETECTOR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include;include;$(BWAPI_DIR)/include;$(BOOST_DIR)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(BWAPI_DIR)/lib/BWAPI.lib;$(BWAPI_DIR)/lib/BWTA.lib;$(BWAPI_DIR)/lib/tinyxml.lib;$(BWAPI_DIR)/lib/CGAL-vc90-mt.lib;$(BWAPI_DIR)/lib/libboost_thread-vc90-mt-1_40.lib;$(BWAPI_DIR)/lib/gmp-vc90-mt.lib;$(BWAPI_DIR)/lib/mpfr-vc90-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TERRAINDETECTOR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../include;$(BWAPI_DIR)/include;$(BOOST_DIR)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(BWAPI_DIR)/lib/BWAPI.lib;$(BWAPI_DIR)/lib/BWTA.lib;$(BWAPI_DIR)/lib/tinyxml.lib;$(BWAPI_DIR)/lib/CGAL-vc90-mt.lib;$(BWAPI_DIR)/lib/libboost_thread-vc90-mt-1_40.lib;$(BWAPI_DIR)/lib/gmp-vc90-mt.lib;$(BWAPI_DIR)/lib/mpfr-vc90-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
+    <Manifest>
+      <EnableDpiAwareness />
+    </Manifest>
+    <Xdcmake>
+      <DocumentLibraryDependencies />
+    </Xdcmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\algorithmConfig.h" />
+    <ClInclude Include="..\include\BuildingData.h" />
+    <ClInclude Include="..\include\BuildingPlacer.h" />
+    <ClInclude Include="..\include\BuildOrderGoalManager.h" />
+    <ClInclude Include="..\include\BuildOrderQueue.h" />
+    <ClInclude Include="..\include\Common.h" />
+    <ClInclude Include="..\include\ConstrucitionManager.h" />
+    <ClInclude Include="..\include\DoubleList.h" />
+    <ClInclude Include="..\include\esConnectedComponent.h" />
+    <ClInclude Include="..\include\esExtractPolygons.h" />
+    <ClInclude Include="..\include\esMapAnalysis.h" />
+    <ClInclude Include="..\include\esPolygon.h" />
+    <ClInclude Include="..\include\esStrategy.h" />
+    <ClInclude Include="..\include\esStrFBMC.h" />
+    <ClInclude Include="..\include\functions.h" />
+    <ClInclude Include="..\include\MetaType.h" />
+    <ClInclude Include="..\include\ProductionManager.h" />
+    <ClInclude Include="..\include\RectangleArray.h" />
+    <ClInclude Include="..\include\TerrainDetectionManager.h" />
+    <ClInclude Include="..\include\TerrainDetectorModule.h" />
+    <ClInclude Include="..\include\TerrainRuler.h" />
+    <ClInclude Include="..\include\UnitManager.h" />
+    <ClInclude Include="..\include\WorkerData.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\BuildingData.cpp" />
+    <ClCompile Include="..\source\BuildingPlacer.cpp" />
+    <ClCompile Include="..\source\BuildOrderGoalManager.cpp" />
+    <ClCompile Include="..\source\BuildOrderQueue.cpp" />
+    <ClCompile Include="..\source\ConstrucitionManager.cpp" />
+    <ClCompile Include="..\source\Dll.cpp" />
+    <ClCompile Include="..\source\esConnectedComponent.cpp" />
+    <ClCompile Include="..\source\esExtractPolygons.cpp" />
+    <ClCompile Include="..\source\esMapAnalysis.cpp" />
+    <ClCompile Include="..\source\esPolygon.cpp" />
+    <ClCompile Include="..\source\esStrategy.cpp" />
+    <ClCompile Include="..\source\esStrFBMC.cpp" />
+    <ClCompile Include="..\source\ProductionManager.cpp" />
+    <ClCompile Include="..\source\TerrainDetectionManager.cpp" />
+    <ClCompile Include="..\source\TerrainDetectorModule.cpp" />
+    <ClCompile Include="..\source\TerrainRuler.cpp" />
+    <ClCompile Include="..\source\UnitManager.cpp" />
+    <ClCompile Include="..\source\WorkerData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TerrainDetector.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

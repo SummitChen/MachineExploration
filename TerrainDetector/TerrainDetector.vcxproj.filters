@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\TerrainDetection">
+      <UniqueIdentifier>{8ab68cc3-5a3d-44ef-aaeb-69465f0e5de8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TerrainDetection">
+      <UniqueIdentifier>{54f53f6d-7376-49bd-8fe3-04573ba7cea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BuildingConstruction">
+      <UniqueIdentifier>{dab825f6-eab2-4af9-80ff-05696b575738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BuildingConstruction">
+      <UniqueIdentifier>{3bbd0150-b066-4dcb-bff8-852e3e265ed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UnitsManagement">
+      <UniqueIdentifier>{bff51add-723c-441e-893b-e0d1bf754b0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UnitsManagement">
+      <UniqueIdentifier>{96d17bb8-73cd-465f-9f03-773ca52d8285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{0b521a61-418f-448f-b87b-749d000f912b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data">
+      <UniqueIdentifier>{687554a6-b333-4d2d-8be0-20417bcf3f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Strategies">
+      <UniqueIdentifier>{a8999f7b-a7cf-43b7-bd32-f632164497be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Strategies">
+      <UniqueIdentifier>{de0ce6c9-68e5-4d91-a265-2aef42cb64f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Strategies\Settings">
+      <UniqueIdentifier>{dd5f4d41-5d08-4784-8e7a-daf5f1ec26c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MapImageProcessing">
+      <UniqueIdentifier>{98004b45-b1c4-414b-852d-9ec8f9484993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MapImageProcessing">
+      <UniqueIdentifier>{63e872ba-8ed5-479f-b525-56117716b0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Kernel">
+      <UniqueIdentifier>{86a544e3-ae06-4ae0-bded-64eb67113ee0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\TerrainDetectorModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TerrainDetectionManager.h">
+      <Filter>Header Files\TerrainDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ConstrucitionManager.h">
+      <Filter>Header Files\BuildingConstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UnitManager.h">
+      <Filter>Header Files\UnitsManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WorkerData.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BuildingData.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BuildOrderQueue.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MetaType.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BuildingPlacer.h">
+      <Filter>Header Files\BuildingConstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BuildOrderGoalManager.h">
+      <Filter>Header Files\BuildingConstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TerrainRuler.h">
+      <Filter>Header Files\TerrainDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ProductionManager.h">
+      <Filter>Header Files\UnitsManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DoubleList.h">
+      <Filter>Header Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\functions.h">
+      <Filter>Header Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\RectangleArray.h">
+      <Filter>Header Files\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esConnectedComponent.h">
+      <Filter>Header Files\MapImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esExtractPolygons.h">
+      <Filter>Header Files\MapImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esMapAnalysis.h">
+      <Filter>Header Files\MapImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esPolygon.h">
+      <Filter>Header Files\MapImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\algorithmConfig.h">
+      <Filter>Header Files\Strategies\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esStrategy.h">
+      <Filter>Header Files\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\esStrFBMC.h">
+      <Filter>Header Files\Strategies</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\Dll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\TerrainDetectorModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\TerrainDetectionManager.cpp">
+      <Filter>Source Files\TerrainDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ConstrucitionManager.cpp">
+      <Filter>Source Files\BuildingConstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\UnitManager.cpp">
+      <Filter>Source Files\UnitsManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\BuildingData.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\BuildOrderQueue.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\WorkerData.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\BuildingPlacer.cpp">
+      <Filter>Source Files\BuildingConstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\BuildOrderGoalManager.cpp">
+      <Filter>Source Files\BuildingConstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\TerrainRuler.cpp">
+      <Filter>Source Files\TerrainDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ProductionManager.cpp">
+      <Filter>Source Files\UnitsManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esConnectedComponent.cpp">
+      <Filter>Source Files\MapImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esExtractPolygons.cpp">
+      <Filter>Source Files\MapImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esMapAnalysis.cpp">
+      <Filter>Source Files\MapImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esPolygon.cpp">
+      <Filter>Source Files\MapImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esStrategy.cpp">
+      <Filter>Source Files\Strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\esStrFBMC.cpp">
+      <Filter>Source Files\Strategies</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TerrainDetector.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
