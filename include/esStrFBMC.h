@@ -19,9 +19,8 @@ public:
 	virtual void calCandidatePosition(bool & resetTarget, TilePosition &Target, Unit * scout);
 
 #ifdef DEBUGGING
-	virtual void debugDraw();
+	virtual void debugDraw(){}
 #endif
-
 private:
     
     void utilityDecision(std::map<double, TilePosition>& resultMap,

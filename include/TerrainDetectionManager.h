@@ -108,7 +108,13 @@ private:
 	bool                                                      update_flag;
 	bool                                                      reset_flag;
 	esStrategy                                                *strategy;
+	Unit*                                                     scout;
 
+#ifdef DEBUGGING
+
+	bool                                                     analyzed;
+	unsigned int                                             potential_num;
+	bool                                                     last_resetting;
 
 	// debug 
 	bool                                                      debug_flag; 
@@ -116,6 +122,7 @@ private:
 	std::fstream                                              middle_level_control;
 	std::fstream                                              recognition_debug_log;
 	std::string                                               file_name;
+#endif
 
 };
 

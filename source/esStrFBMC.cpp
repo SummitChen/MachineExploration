@@ -30,9 +30,9 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     int searchLevel3 = 8 * sightRange;
     
     //------------debugging---------------
-    level1_radius = searchLevel1;
-    level2_radius = searchLevel2;
-    level3_radius = searchLevel3;
+    level1_radius = (float)searchLevel1;
+    level2_radius = (float)searchLevel2;
+    level3_radius = (float)searchLevel3;
 	circleCenter = scoutLocation;
     //------------------------------------
     
@@ -42,17 +42,13 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     int iteraterLevel2 = (int)pow((double)searchLevel2, 2.0) * 10;
     int iteraterLevel3 = (int)pow((double)searchLevel3, 2.0) * 10;
 	int iteraterGlobal = Broodwar->mapHeight() * Broodwar->mapWidth() * 10;
-    int iteraterLevel;
     
     std::vector<TilePosition> localCanPosLevel1;
     std::vector<TilePosition> localCanPosLevel2;
     std::vector<TilePosition> localCanPosLevel3;
     std::vector<TilePosition> localCanPosLevel3_2;
     std::vector<TilePosition> localCanPosVec;
-    
-    //std::vector<pos2>    res;
-    int                  travelDistance;
-    
+
     alpha = 0.4;
     beta = 0.6;
     
@@ -72,25 +68,6 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     //----------------debugging-------------------
     std::vector<TilePosition> polygonPoints;
     //--------------------------------------------
-      
-/*
-    //-------------------debugging-------------------------------------------------
-    printf("Transferred explored polygon size %lu \n", exploredPolygons.size());
-    
-    std::set<esPolygon*>::iterator pit = exploredPolygons.begin();
-    std::set<esPolygon*>::iterator pend = exploredPolygons.end();
-    
-    for ( unsigned int i = 0; pit != pend; ++ pit, ++ i) {
-        printf("Transferred polygon %u size %lu \n", i, (*pit)->pointSet.size());
-        if ( (*pit)->getHoles().size() != 0) {
-            printf("Transferred polygon %u holes size %lu \n", i, (*pit)->getHoles().size());
-            for ( unsigned int j = 0; j < (*pit)->getHoles().size(); ++ j) {
-                printf("Transferred polygon %u hole %u size %lu \n", i, j, (*pit)->getHoles()[j].pointSet.size());
-            }
-        }
-    }
-    //-------------------------------------------------------------------------------
-*/
     
     //-------------------------debugging------------------------------
     std::set<esPolygon*>::iterator it = exploredPolygons.begin();
@@ -131,16 +108,9 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     }
 
 #ifdef DEBUGGING
+    
+	candidate_number = globleCanPos.size();
 
-    //-------------debugging-------------------------------------------------
-    debugmesh.clear();
-    
-    debugmesh.setMode(OF_PRIMITIVE_POINTS);
-    
-    for ( unsigned int i = 0; i < polygonPoints.size(); ++ i) {
-        debugmesh.addVertex(ofVec2f(polygonPoints[i].x, polygonPoints[i].y));
-    }
-    //-----------------------------------------------------------------------
 #endif
 
     for ( unsigned int i = 0; i < globleCanPos.size(); ++ i) {
@@ -173,7 +143,7 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     
     for ( unsigned int i = 0; i < postGlobleCanPosArray1.size(); ++ i) {
         
-		float distanceToCenter = sqrt( pow((double)(postGlobleCanPosArray1[i].x() - scout->getTilePosition().x()), 2.0) + pow((double)(postGlobleCanPosArray1[i].y() - scout->getTilePosition().y()), 2.0));
+		float distanceToCenter = (float)sqrt( pow((double)(postGlobleCanPosArray1[i].x() - scout->getTilePosition().x()), 2.0) + pow((double)(postGlobleCanPosArray1[i].y() - scout->getTilePosition().y()), 2.0));
         if ( distanceToCenter < searchLevel3 ) {
             localCanPosLevel3.push_back(postGlobleCanPosArray1[i]);
             if ( distanceToCenter < searchLevel2 ) {
@@ -187,7 +157,7 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     
     for ( unsigned int i = 0; i < postGlobleCanPosArray2.size(); ++ i) {
         
-        float distanceToCenter = sqrt( pow((double)(postGlobleCanPosArray2[i].x() - scout->getTilePosition().x()), 2.0) + pow((double)(postGlobleCanPosArray2[i].y() - scout->getTilePosition().y()), 2.0));
+        float distanceToCenter = (float)sqrt( pow((double)(postGlobleCanPosArray2[i].x() - scout->getTilePosition().x()), 2.0) + pow((double)(postGlobleCanPosArray2[i].y() - scout->getTilePosition().y()), 2.0));
         if ( distanceToCenter < searchLevel3 ) {
             localCanPosLevel3_2.push_back(postGlobleCanPosArray2[i]);
         }
@@ -248,26 +218,14 @@ void esStrFBMC::calCandidatePosition(bool & resetTarget, TilePosition &target, U
     
 display:
     ;
-    //float tilePercentage = calculateTilePercentage(exploredMap, scoutBot, target);
-    //float segPercentage  = calculateSegPercentage(exploredMap, scoutBot, target);
-    //float feaPercentage  = calculateFeaPercentage(exploredMap, scoutBot, target);
-    
-    //printf("target - (%d, %d), tile - %f, seg - %f, feature - %f \n", (int)target.x, (int)target.y, tilePercentage, segPercentage, feaPercentage);
-    
-#ifdef DEBUGGING 
-    //--------debug----------
-    debugMesh2.clear();
-    debugMesh2.setMode(OF_PRIMITIVE_POINTS);
-    debugMesh2.addVertex(target);
-    //----------------------------------- 
-#endif
+
 }
 
 void esStrFBMC::utilityDecision(std::map<double, TilePosition> &resultMap, std::vector<TilePosition> canPosVec, std::set<esPolygon *> exploredPolygons, TilePosition& target, bool localSearch){
     
     resultMap.clear();
     
-    int                  travelDistance = 0.0;
+    int                  travelDistance = 0;
     double               tileExploredUtility = 0.0;
     double               segExploredUtility = 0.0;
     double               featureExploredUtility = 0.0;
@@ -284,7 +242,12 @@ void esStrFBMC::utilityDecision(std::map<double, TilePosition> &resultMap, std::
         
         //candidatePos = ofVec2f((float)canPosVec[i].x, (float)canPosVec[i].y);
 		//travelDistance = scoutBot->getDistance(canPosVec[i]);
-		travelDistance = sqrt(pow(scoutBot->getTilePosition().x() - canPosVec[i].x(), 2.0) + pow(scoutBot->getTilePosition().y() - canPosVec[i].y(), 2.0));
+
+		if (evaluateBuildTile(canPosVec[i]) != WALKABLE || isResourceTaken(canPosVec[i])){
+			continue;
+		}
+		
+		travelDistance = (int)sqrt(pow(scoutBot->getTilePosition().x() - canPosVec[i].x(), 2.0) + pow(scoutBot->getTilePosition().y() - canPosVec[i].y(), 2.0));
 		unitBoundRadius = sqrt(pow( (scoutBot->getRight() - scoutBot->getLeft())/2.0, 2.0) + pow( (scoutBot->getTop() - scoutBot->getBottom())/2.0, 2.0));
 		costComponent = exp( unitBoundRadius - travelDistance);
         
@@ -333,34 +296,3 @@ void esStrFBMC::utilityDecision(std::map<double, TilePosition> &resultMap, std::
     }
     
 }
-
-#ifdef DEBUGGING
-
-void esStrFBMC::debugDraw(){
-    
-	/*
-    ofPushStyle();
-    ofFill();
-    ofSetColor(255, 255, 0);
-    glPointSize(4.0);
-    debugmesh.draw();
-    ofSetColor(0, 255, 0);
-    debugMesh2.draw();
-    
-    ofSetColor(0, 255, 255);
-    ofNoFill();
-    if (level1) {
-        ofCircle(circleCenter.x, circleCenter.y, level1_radius);
-    }
-    if (level2) {
-        ofCircle(circleCenter.x, circleCenter.y, level2_radius);
-    }
-    if (level3) {
-        ofCircle(circleCenter.x, circleCenter.y, level3_radius);
-    }
-    ofPopStyle();
-	*/
-    
-}
-
-#endif

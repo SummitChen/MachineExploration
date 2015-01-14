@@ -34,11 +34,18 @@ TerrainDetectionManager::TerrainDetectionManager(void)
 
 	initial_flag = false;
 
+	initialization();
 }
 
 
 TerrainDetectionManager::~TerrainDetectionManager(void)
 {
+#if 1
+	if(strategy != NULL){
+		delete strategy;
+		strategy = NULL;
+	}
+#endif
 }
 
 
@@ -335,16 +342,60 @@ void TerrainDetectionManager::region_recogonition()
 
 void TerrainDetectionManager::on_time()
 {
+
 	if ( initial_flag == false)
 	{
+
+		#ifdef DEBUGGING
+		   Broodwar->drawTextScreen(200, 0, "Terrain Detection Manager is not initilized...");
+        #endif
 		return;
 	}
 
+#if 1
+
+#ifdef DEBUGGING
+
+	// S: whether the may has been analyzied in exploration loops.
+	if(analyzed){
+	   Broodwar->drawTextScreen( 5, 16 , "Analyzation : ON");
+	}else{
+	   Broodwar->drawTextScreen( 5, 16 , "Analyzation : OFF");
+	}
+
+	// S: Illustrate the target resetting situation.
+	if(last_resetting){
+		Broodwar->drawTextScreen( 5, 16 * 2, "Last Reset : ON");
+	}else{
+	    Broodwar->drawTextScreen( 5, 16 * 2, "Last Reset : OFF");
+	}
+
+	// Number of candidate positions 
+	Broodwar->drawTextScreen(5, 16 * 3, "Candidate Number : %d", strategy->getCandidateNumbers());
+
+	// Name of scout.
+	Broodwar->drawTextScreen(5, 16 * 4, "Scout name : %d", scout->getID());
+
+	// Target
+	Broodwar->drawTextScreen(5, 16 * 5, "Target Tile : (%d, %d)", temp_target.x(), temp_target.y());
+
+	// Current Position
+	Broodwar->drawTextScreen(5, 16 * 6, "Current Position : (%d, %d)", scout->getTilePosition().x(), scout->getTilePosition().y());
+	
+
+#endif
+	
+#endif
+
+	low_level_navigation();
+
+#if 0
+	//-----------------------------------
 	update_grid_info();
 
 	//high_level_planning();
 
-	low_level_navigation();
+
 
 	low_level_patch_merge();
 
@@ -358,6 +409,7 @@ void TerrainDetectionManager::on_time()
 			region_recogonition();
 		}
 	}
+#endif
 
 }
 
@@ -768,340 +820,25 @@ void TerrainDetectionManager::high_level_planning()
 void TerrainDetectionManager::low_level_navigation()
 {
 
-	std::pair<BWAPI::Unit*, ScoutProperty*> scout_pair;
-	size_t width = TerrainRuler::get_instance()->get_map_width();
-	size_t height = TerrainRuler::get_instance()->get_map_height();
-	TerrainTile*** tiles_map = TerrainRuler::get_instance()->get_tiles_map();
-
-	BOOST_FOREACH( scout_pair, scouts_map){
-
-		if ( scouts_map.size() == 0)
-		{
-			break;
-		}
-
-		if (!scout_pair.second->moving_flag &&
-			!scout_pair.second->navigation_flag)
-		{
-
-			if ( BWAPI::Broodwar->getFrameCount() % 5 == 0)
-			{
-				if ( scout_pair.second->moving_flag)
-				{
-					BWAPI::Broodwar->printf(" moving flag is true. ");
-				}else{
-				    BWAPI::Broodwar->printf(" moving flag is false. ");
-				}
-
-				if ( scout_pair.second->navigation_flag)
-				{
-					BWAPI::Broodwar->printf(" navigation flag is true. ");
-				}else{
-					BWAPI::Broodwar->printf(" navigation flag is false. ");
-				}
-			}
-
-			scout_pair.second->pre_pos = scout_pair.first->getPosition();
-			scout_pair.second->pre_tile_x = scout_pair.second->tile_index_x;
-			scout_pair.second->pre_tile_y = scout_pair.second->tile_index_y;
-			scout_pair.first->move( scout_pair.second->destination);
-
-			if ( (scout_pair.first->getPosition() - scout_pair.second->destination).getLength() <= 5 )
-			{
-				scout_pair.second->moving_flag = true;
-			}
-
-			scout_pair.second->direction = double2( scout_pair.second->destination - scout_pair.second->pre_pos );
-			scout_pair.second->direction.normalise();
-
-			if ( BWAPI::Broodwar->getFrameCount() % 5 == 0)
-			{
-				if ( scout_pair.second->moving_flag)
-				{
-					BWAPI::Broodwar->printf(" moving flag is true after assign. ");
-				}else{
-					//BWAPI::Broodwar->printf(" moving flag is false after assign. ");
-				} 
-			}
-
-		}else if( scout_pair.second->moving_flag &&
-			!scout_pair.second->navigation_flag)
-		{
-			// to guarantee the scout move to the edge of the region
-
-			if ( BWAPI::Broodwar->getFrameCount() % 5 == 0)
-			{
-				BWAPI::Broodwar->printf("moving ING......");
-				BWAPI::Broodwar->printf(" position is (%d, %d).", scout_pair.first->getPosition().x(), scout_pair.first->getPosition().y());
-				BWAPI::Broodwar->printf(" destination is (%d, %d).", scout_pair.second->destination.x(), scout_pair.second->destination.y());
-			}
-
-			BWTA::Region* region = BWTA::getRegion(scout_pair.first->getPosition());
-			BWTA::Polygon poly = region->getPolygon();
-			BWAPI::Position pos = scout_pair.first->getPosition();
-			int sight_range = scout_pair.first->getType().sightRange();
-			bool redirection_flag = false;
-
-			BOOST_FOREACH(BWAPI::Position edge_point, poly){
-				if ( (pos - edge_point).getLength() <= sight_range * 0.4)
-				{
-					redirection_flag = true;
-					break;
-				}
-			}
-
-			if ( (pos.x() - sight_range * 0.4) <= 0 ||
-				(pos.y() - sight_range * 0.4)<= 0 ||
-				(pos.x() + sight_range * 0.4) >= width||
-				(pos.y() + sight_range * 0.4) >= height )
-			{
-				redirection_flag = true;
-			}
-
-			if ( redirection_flag )
-			{
-				scout_pair.second->navigation_flag = true;
-				scout_pair.second->moving_flag = false;
-				//scout_pair.first->stop();
-			}else{
-				double theta = scout_pair.first->getAngle();
-				BWAPI::Position dir = BWAPI::Position( cos(theta) * 40, sin(theta) * 40);
-				scout_pair.second->pre_pos = scout_pair.first->getPosition();
-				scout_pair.second->pre_tile_x = scout_pair.second->tile_index_x;
-				scout_pair.second->pre_tile_y = scout_pair.second->tile_index_y;
-				scout_pair.second->destination = scout_pair.first->getPosition() + dir;
-				scout_pair.first->move( scout_pair.second->destination );
-				scout_pair.second->direction = double2( scout_pair.second->destination - scout_pair.second->pre_pos );
-				scout_pair.second->direction.normalise();
-			}
-
-		}else if ( scout_pair.second->navigation_flag &&
-			! scout_pair.second->moving_flag)
-		{
-			if ( debug_flag == false)
-			{
-				out.open(file_name.c_str(), std::ios::out | std::ios::app);
-
-				if ( out.is_open())
-				{
-					char time_[64];
-					time_t t = time(0);
-					//strftime( time_, sizeof(time_), "%Y/%m/%d %H %M %S",localtime_s(&t) );
-
-					out<< " Potential Navigation Started..."<<time_<<std::endl;
-					debug_flag = true;
-					out.close();
-				}
-			}
-			if ( (scout_pair.first->getPosition() - scout_pair.second->destination).getLength() <= 3 &&
-				TerrainRuler::get_instance()->get_initialized_flag() )
-			{
-				double optimal_potential_value = 10.0; 
-
-				int i = scout_pair.second->tile_index_x;
-				int j = scout_pair.second->tile_index_y;
-
-				int sight_scope = scout_pair.first->getType().sightRange() / RATIO;
-
-				if ( ( i > 0 ) && (j > 0 ) &&
-					( i != height ) && ( j != width ))
-				{
-					out.open(file_name.c_str(), std::ios::out | std::ios::app);
-
-					if ( out.is_open())
-					{
-						out<<" List of potential value it can reach in ("<<i<<", "<<j<<"). Previous Tile ( "<< scout_pair.second->pre_tile_x
-							<<", "<< scout_pair.second->pre_tile_y<<"). "<<std::endl;
-						out.close();
-					}
-
-					int u_optimal = 0;
-					int v_optimal = 0;
-
-					int potential_point_count = 1;
-					for( int u = -1; u < 2; u++){
-						for ( int v = -1; v < 2; v++)
-						{
-							
-							if ( ( u == 0) && (v == 0 )||
-								( i + u < 0 ) || ( j + v < 0 ) ||
-								( i + u > height) || ( j + v > width ))
-							{
-								break;
-							}
-
-							double distance_;
-							double nearest_distance = 65535.0;
-							bool resource_dis_flag = true;
-							bool avoid_chokepoint_flag = true;
-
-							BOOST_FOREACH(BWTA::Chokepoint *cp, chokepoints){
-
-								double temp_nearest_distance = 65535.0;
-
-								distance_ = sqrt( pow( cp->getCenter().x() - tiles_map[i+u][j+v]->pos.x(), 2.0) 
-									+ pow( cp->getCenter().y() - tiles_map[i+u][j+v]->pos.y(), 2.0));
-
-								temp_nearest_distance = temp_nearest_distance < distance_ ? temp_nearest_distance : distance_;
-
-								distance_ = sqrt( pow( cp->getSides().first.x() - tiles_map[i+u][j+v]->pos.x(), 2.0) 
-									+ pow( cp->getSides().first.y() - tiles_map[i+u][j+v]->pos.y(), 2.0));
-
-								temp_nearest_distance = temp_nearest_distance < distance_ ? temp_nearest_distance : distance_;
-
-								distance_ = sqrt( pow( cp->getSides().second.x() - tiles_map[i+u][j+v]->pos.x(), 2.0) 
-									+ pow( cp->getSides().second.y() - tiles_map[i+u][j+v]->pos.y(), 2.0));
-
-								temp_nearest_distance = temp_nearest_distance < distance_ ? temp_nearest_distance : distance_;
-
-								if ( temp_nearest_distance <= 60 )
-								{
-									avoid_chokepoint_flag = false;
-								}
-							}
-
-							BOOST_FOREACH(BWAPI::Unit* mu, BWAPI::Broodwar->getMinerals()){
-
-								BWAPI::Position q= mu->getInitialPosition();
-
-								distance_ = sqrt(pow(q.x() - tiles_map[i+u][j+v]->pos.x(), 2.0) 
-									+ pow(q.y() - tiles_map[i+u][j+v]->pos.y(), 2.0));
-
-								distance_ -= 30;
-
-								nearest_distance = distance_ <= nearest_distance ? distance_ : nearest_distance;
-							}
-
-							BOOST_FOREACH(BWAPI::Unit* gu, BWAPI::Broodwar->getGeysers()){
-
-								BWAPI::TilePosition c = gu->getInitialTilePosition();
-								BWAPI::Position p = gu->getInitialPosition();
-
-								double distance_1;
-
-								double p1 = (c.x()*32 - p.x()) * (tiles_map[i+u][j+v]->pos.y() - p.y()) / (tiles_map[i+u][j+v]->pos.x() - p.x());
-
-								if ( p1 >= c.y() * 32 && p1 <= c.y() * 32 + 2 * 32 )
-								{
-									distance_ = sqrt( pow( c.x() * 32 - tiles_map[i+u][j+v]->pos.x(), 2.0) + pow( p1 - tiles_map[i+u][j+v]->pos.y(), 2.0));
-								}
-
-								double p2 = (c.x()*32 + 4 * 32 - p.x()) * (tiles_map[i+u][j+v]->pos.y() - p.y()) / (tiles_map[i+u][j+v]->pos.x() - p.x());
-
-								if ( p2 >= c.y() * 32 && p1 <= c.y() * 32 + 2 * 32 )
-								{
-									distance_1 = sqrt( pow( c.x() * 32 - tiles_map[i+u][j+v]->pos.x(), 2.0) + pow( p2 - tiles_map[i+u][j+v]->pos.y(), 2.0));
-									distance_ = distance_ < distance_1 ? distance_ : distance_1;
-								}
-
-								double p3 = (c.y()*32 - p.y()) * (tiles_map[i+u][j+v]->pos.x() - p.x()) / (tiles_map[i+u][j+v]->pos.y() - p.y());
-
-								if ( p3 >= c.x() * 32 && p3 <= c.x() * 32 + 4 * 32 )
-								{
-									distance_1 = sqrt( pow( c.y() * 32 - tiles_map[i+u][j+v]->pos.x(), 2.0) + pow( p3 - tiles_map[i+u][j+v]->pos.x(), 2.0));
-									distance_ = distance_ < distance_1 ? distance_ : distance_1;
-								}
-
-								double p4 = (c.y()*32 + 2 * 32 - p.y()) * (tiles_map[i+u][j+v]->pos.x() - p.x()) / (tiles_map[i+u][j+v]->pos.y() - p.y());
-
-								if ( p4 >= c.x() * 32 && p4 <= c.x() * 32 + 4 * 32 )
-								{
-									distance_1 = sqrt( pow( c.y() * 32 - tiles_map[i+u][j+v]->pos.x(), 2.0) + pow( p3 - tiles_map[i+u][j+v]->pos.x(), 2.0));
-									distance_ = distance_ < distance_1 ? distance_ : distance_1;
-								}
-
-								nearest_distance = distance_ <= nearest_distance ? distance_ : nearest_distance;
-
-							}
-
-							if ( nearest_distance <= 16)
-							{
-								resource_dis_flag = false;
-							}
-
-							if ( ( optimal_potential_value > tiles_map[i + u][j + v]->a_potential_value) &&
-								( tiles_map[i + u][j + v]->pass_flag == PASS_WALKABLE) && resource_dis_flag
-								&& avoid_chokepoint_flag)
-							{
-								int visit_iterator = 0; 
-								int tiles_size = scout_pair.second->pre_visited_tiles.size();
-                            
-								for ( ; visit_iterator < tiles_size; visit_iterator++)
-								{
-									if ( (scout_pair.second->pre_visited_tiles[visit_iterator].x == i + u) &&
-										(scout_pair.second->pre_visited_tiles[visit_iterator].y == j + v))
-									{
-										goto gosearch;
-									}
-								}
-								
-								optimal_potential_value = tiles_map[i + u][j + v]->a_potential_value;
-								u_optimal = u;
-								v_optimal = v;
-							}
-
-
-							out.open( file_name.c_str(), std::ios::out | std::ios::app);
-
-							if ( out.is_open())
-							{
-								out<< " visited tile set size" << scout_pair.second->pre_visited_tiles.size()
-									<<potential_point_count<<"( "<< (i + u) <<", "<< (j + v) <<")"
-									<<" potential: "<< tiles_map[i + u][j + v]->a_potential_value<<"  "
-									<<" pass_flag: "<< tiles_map[i + u][j + v]->pass_flag <<" "
-									<<" resource_dis_flag" << resource_dis_flag<<" "
-									<<" avoid_chokepoint_flag"<<avoid_chokepoint_flag<<" "<<std::endl;
-
-								if ( potential_point_count % 3 == 0)
-								{
-									out<<"\n";
-								}
-								out.close();
-							}
-
-							potential_point_count++;
-gosearch:
-							continue;
-						}
-
-						if ( (potential_point_count - 1) % 3 != 0)
-						{
-							out.open(file_name.c_str(), std::ios::out | std::ios::app);
-
-							if ( out.is_open())
-							{
-								out<<"\n";
-								out.close();
-							}
-						}
-					}
-					scout_pair.second->pre_pos = scout_pair.first->getPosition();
-					scout_pair.second->pre_tile_x = scout_pair.second->tile_index_x;
-					scout_pair.second->pre_tile_y = scout_pair.second->tile_index_y;
-					tile_coordiante pre_tile;
-					pre_tile.x = scout_pair.second->pre_tile_x;
-					pre_tile.y = scout_pair.second->pre_tile_y;
-					
-					scout_pair.second->pre_visited_tiles.push_back( pre_tile );
-
-					scout_pair.second->destination = tiles_map[i + u_optimal][j + v_optimal]->pos;
-					scout_pair.first->move(scout_pair.second->destination);
-					scout_pair.second->direction = double2( scout_pair.second->destination - scout_pair.second->pre_pos);
-					scout_pair.second->direction.normalise();
-					
-
-					out.open(file_name.c_str(), std::ios::out | std::ios::app);
-
-					if ( out.is_open())
-					{
-						out<<"Action: Move to (" << ( i + u_optimal) << ", " << (j + v_optimal) <<") "<<std::endl;
-						out.close();
-					}
-
-				}									
-
-			}
-		}
+	// detection code 
+
+	//-1. Arrived in target 
+	//-2. Case two the scout gets sucked.
+	if ( temp_target.x() == scout->getTilePosition().x() 
+		&& temp_target.y() == scout->getTilePosition().y()){
+        strategy->calCandidatePosition(reset_flag, temp_target, scout);
+#ifdef DEBUGGING
+		last_resetting = false;
+#endif
+	}
+
+	if (reset_flag){
+		move_to_tile(scout, temp_target);
+
+#ifdef DEBUGGING
+		last_resetting = true;
+#endif
+		reset_flag = false;
 	}
 
 }
@@ -1118,13 +855,15 @@ void TerrainDetectionManager::initialization()
 	size_t width = TerrainRuler::get_instance()->get_map_width();
 	size_t height = TerrainRuler::get_instance()->get_map_height();
 
+#ifdef DEBUGGING
+	analyzed = false;
+	potential_num = 0;
+	last_resetting = false;
+#endif
+
 	width *=  RATIO;
 	height *= RATIO;
-
-	//std::vector<tile_coordiante> st_point_pool;
-	//st_point_pool.push_back()
-
-	Unit* scout;
+	
 	BOOST_FOREACH(BWAPI::Unit* unit, BWAPI::Broodwar->self()->getUnits()){
 		if ( unit->getType().isWorker() &&
 			!unit->isTraining())
@@ -1138,6 +877,10 @@ void TerrainDetectionManager::initialization()
 	strategy->calCandidatePosition(reset_flag, temp_target, scout);
 	if (reset_flag){
 		move_to_tile(scout, temp_target);
+#ifdef DEBUGGING
+       last_resetting = true;
+#endif
+		reset_flag = false;
 	}
 
 	initial_flag = true;
@@ -1178,5 +921,6 @@ Patch TerrainDetectionManager::getStaticPatchBuffer()
 }
 
 void TerrainDetectionManager::move_to_tile(Unit* unit, TilePosition tile){
-  // to be continue....
+   Position tile_center( tile.x() * 32 + 16, tile.y() * 32 + 16);
+   unit->move( tile_center );
 }

@@ -3,11 +3,11 @@ class algorithmConfig
 {
 public:
     algorithmConfig(){
-        iSegment = 0.4;
-        iGrid = 0.4;
-        iFeature = 0.2;
-        alpha = 0.4;
-        beta = 0.6;
+        iSegment = (float)0.4;
+        iGrid = (float)0.4;
+        iFeature = (float)0.2;
+        alpha = (float)0.4;
+        beta = (float)0.6;
     }
     
     ~algorithmConfig(){}

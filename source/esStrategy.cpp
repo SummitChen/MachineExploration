@@ -95,37 +95,6 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 		}
 	}
 
-#ifdef DEBUGGING
-	printf("There are %lu ploygons. \n", proVertexVec.size());
-	//--------------------debugging-------------------------
-	for (unsigned int i = 0; i < proVertexVec.size(); ++ i) {
-		printf("There are %lu vertices in vector %u. \n", proVertexVec[i].size(), i);
-		for ( unsigned int j = 0; j < proVertexVec[i].size(); ++ j) {
-			printf("vectex (%u, %u) located in (%u, %u)", i, j, proVertexVec[i][j].pos.x, proVertexVec[i][j].pos.y);
-			switch (proVertexVec[i][j].explorationFlag) {
-			case WALKABLE:
-				printf("is walkable");
-				break;
-			case UN_WALKABLE:
-				printf("is unwalkable");
-				break;
-			case UN_KNOWN:
-				printf("is unknown");
-				break;
-			case RESOURCE:
-				printf("is resource");
-				break;
-			default:
-				printf("is error");
-				break;
-			}
-			printf("\n");
-		}
-	}
-	//------------------------------------------------------
-#endif
-
-
 	for( unsigned int i = 0; i < proVertexVec.size(); ++ i){
 
 		unsigned int insertAcount = 0;
@@ -133,7 +102,7 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 		edgeNode trail;
 
 
-		for ( unsigned int j = 0; j < proVertexVec[i].size(); ++ j) {
+		for ( unsigned int j = 0; j < proVertexVec[i].size() -1; ++ j) {
 
 			TilePosition ptPoint1;
 			TilePosition ptPoint2;
@@ -143,18 +112,12 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 			if ( j < proVertexVec[i].size() - 1) {
 				trail = proVertexVec[i][j+1];
 			}else{
-				// printf("reach the end of List\n");
 				trail = proVertexVec[i][0];
 
 			}
 			//------------------------------------
 
 			if ( lineInterCircle( iter.pos, trail.pos, target, scout->getType().sightRange() / 32, ptPoint1, ptPoint2)) {
-				//---------------------------------------
-				//insertAcount ++;
-				//printf("-----%u------iteration---%u-----", insertAcount,j);
-				//printf("begin point (%u, %u), end point (%u, %u)\n", iter.pos.x, iter.pos.y, trail.pos.x, trail.pos.y);
-				//--------------------------------------
 
 				if ( ptPoint1.x() > 0 && ptPoint1.x() < Broodwar->mapWidth()
 					&& ptPoint1.y() > 0 && ptPoint1.y() < Broodwar->mapHeight()) {
@@ -170,9 +133,6 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 						}
 
 						++j;
-						//----------------------------------------
-						//printf("First insert position (%u, %u) \n", ptPoint1.x, ptPoint1.y);
-						//----------------------------------------
 				}
 
 				if ( ptPoint2.x() > 0 && ptPoint2.x() < Broodwar->mapWidth()
@@ -189,9 +149,6 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 						}
 
 						++ j;
-						//------------------------------------------
-						//printf("Second insert position (%u, %u)\n", ptPoint2.x, ptPoint2.y);
-						//------------------------------------------
 				}
 			}
 
@@ -204,7 +161,7 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 		edgeNode iter;
 		edgeNode trail;
 
-		for ( unsigned int j = 0; j < proVertexVec[i].size(); ++j) {
+		for ( unsigned int j = 0; j < proVertexVec[i].size()-1; ++j) {
 
 			iter = proVertexVec[i][j];
 			if ( j < proVertexVec[i].size() ) {
@@ -242,11 +199,6 @@ float esStrategy::calculateSegPercentage(const Unit* scout, const TilePosition& 
 
 }
 
-/*
-void esStrategy::recalSegVertices(Unit* scout, TilePosition& target){
-
-}
-*/
 
 /*
 *  Note: All the tile-based calculation for exploration is running 
@@ -306,17 +258,13 @@ unsigned char esStrategy::evaluateBuildTile(const TilePosition& pos){
 
 	for( int i = pos.x() * 4; i < ( pos.x() + 1) * 4; ++ i ){
 		for( int j = pos.y() * 4; j < ( pos.y() + 1) * 4; ++ j ){
-			if( Broodwar -> isWalkable(i, j)){
-				sumWalkable++; 
+			if( !Broodwar -> isWalkable(i, j)){
+				return UN_WALKABLE; 
 			}
 		}
 	}
 
-	if (sumWalkable / 16.0 >= 0.5){
-		return WALKABLE;
-	}else{
-		return UN_WALKABLE;
-	}
+	return WALKABLE;
 }
 
 /*
@@ -405,24 +353,6 @@ float esStrategy::calculateFeaPercentage(const Unit * scout, const TilePosition 
 		double sumExplored = (double)(sum - sumUnexplored);
 		return ( sumResource * sumUnexplored) / ( sumD * sumExplored );
 	}
-
-#if 0
-	if ( sum == 0 || sum == sumUnexplored) {
-		return 0;
-	}else{
-		double sumD = (double)sum;
-		double sumExplored = (double)(sum - sumUnexplored);
-		double exploredPercent = sumResource / sumExplored;
-		if ( exploredPercent < 0.1) {
-			return 4 * ( sumResource * sumUnexplored) / ( sumD * sumExplored );
-		}else if( exploredPercent >= 0.1 && exploredPercent <= 0.5){
-			return 2 * ( sumResource * sumUnexplored) / ( sumD * sumExplored );
-		}else{
-			return ( sumResource * sumUnexplored) / ( sumD * sumExplored );
-		}
-
-	}
-#endif
 }
 
 bool esStrategy::isReachable(std::set<esPolygon *> polygons, const TilePosition & p1, const TilePosition & p2){
@@ -548,3 +478,11 @@ bool esStrategy::isGeysersTaken(const TilePosition & p){
 
 	return false;
 }
+
+#ifdef DEBUGGING
+
+unsigned int esStrategy::getCandidateNumbers(){
+	return candidate_number;
+}
+
+#endif

@@ -26,10 +26,9 @@ esPolygon::esPolygon(esPolygon const & b){
 
 double esPolygon::getArea() const
 {
-    if ( pointSet.size() < 3) return 0;
-    
-    double a = 0;
-    for(unsigned int i = 0; i + 1 < pointSet.size();i++)
+	if ( pointSet.size() < 3) return 0;  
+	double a = 0;
+	for(unsigned int i = 0; i + 1 < pointSet.size();i++)
     {
         a+=(double)(this->pointSet[i].x())*(this->pointSet[i+1].y())-(double)(this->pointSet[i+1].x())*(this->pointSet[i].y());
     }

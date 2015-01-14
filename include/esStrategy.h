@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include "Common.h"
 #include "algorithmConfig.h"
 #include "esPolygon.h"
 #include "TerrainDetectorModule.h"
@@ -41,6 +42,7 @@ public:
 #ifdef DEBUGGING
 	//-----------------------------
 	virtual void debugDraw(){}
+	unsigned int getCandidateNumbers();
 	/*-----------------------------*/
 #endif
 
@@ -79,7 +81,8 @@ protected:
     
 #ifdef DEBUGGING
     //-----------------debugging Log---------------
-    std::fstream logFile;
+    std::fstream                            logFile;
+	unsigned int                            candidate_number;
 #endif
 	algorithmConfig config; 
 };
